@@ -7,12 +7,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Data
 @Entity
 @Table(name = "order_items")
-@Data
 @NoArgsConstructor
 public class OrderItem {
     @Id
@@ -23,6 +23,14 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
 
     @Column(name = "quantity")
     private int quantity;
@@ -42,6 +50,7 @@ public class OrderItem {
     private LocalDateTime updatedAt;
 
     public OrderItem(Product product) {
+        this.user = user;
         this.product = product;
         this.quantity = 1;
         this.pricePerProduct = product.getPrice();
@@ -49,6 +58,7 @@ public class OrderItem {
     }
 
     public void incrementQuantity() {
+        this.user = user;
         this.quantity++;
         this.price = this.pricePerProduct.multiply(new BigDecimal(this.quantity));
     }
@@ -62,4 +72,5 @@ public class OrderItem {
         }
 
     }
+
 }

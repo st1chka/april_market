@@ -32,9 +32,9 @@ public class ProductService {
     public ProductDto createNewProduct(ProductDto productDto) {
         Product product = new Product();
         product.setPrice(productDto.getPrice());
-        product.setTitle(productDto.getTitle());
         Category category = categoryService.findByTitle(productDto.getCategoryTitle()).orElseThrow(() -> new ResourceNotFoundException("Category doesn't exists product.categoryTitle = " + productDto.getCategoryTitle() + " (Product creation)"));
         product.setCategory(category);
+        product.setTitle(productDto.getTitle());
         productRepository.save(product);
         return new ProductDto(product);
     }

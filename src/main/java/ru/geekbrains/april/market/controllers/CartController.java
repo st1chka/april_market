@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.april.market.dtos.CartDto;
+import ru.geekbrains.april.market.models.User;
 import ru.geekbrains.april.market.utils.Cart;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -17,6 +20,8 @@ public class CartController {
     public void addToCart(@PathVariable(name = "productId") Long id) {
         cart.addToCart(id);
     }
+
+
     @GetMapping("/delete/{productId}")
     public void deleteToCart(@PathVariable(name = "productId") Long id) {
         cart.deleteToCart(id);;

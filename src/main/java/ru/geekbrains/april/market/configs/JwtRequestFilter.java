@@ -10,6 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.geekbrains.april.market.dtos.OrderDto;
+import ru.geekbrains.april.market.models.Order;
+import ru.geekbrains.april.market.models.User;
+import ru.geekbrains.april.market.services.OrderService;
 import ru.geekbrains.april.market.utils.JwtTokenUtil;
 
 import javax.servlet.FilterChain;
@@ -26,11 +30,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
 
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
         String username = null;
+//        log.debug(username);
         String jwt = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);

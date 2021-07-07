@@ -69,6 +69,8 @@ values ('Хлеб', 25.50, 1),
        ('Макароны', 100.00, 1),
        ('Апельсин', 35.00, 1);
 
+
+
 create table order_items
 (
     id                bigserial primary key,
@@ -79,3 +81,16 @@ create table order_items
     created_at        timestamp default current_timestamp,
     updated_at        timestamp default current_timestamp
 );
+
+
+create table orders
+(
+    id         bigserial primary key,
+    user_id    bigint  references users (id),
+    price      numeric(8, 2),
+    address    varchar(255),
+    phone      bigint,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
+);
+

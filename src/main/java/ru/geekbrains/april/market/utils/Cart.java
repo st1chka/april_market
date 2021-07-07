@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.OrderItem;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.models.User;
 import ru.geekbrains.april.market.services.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
