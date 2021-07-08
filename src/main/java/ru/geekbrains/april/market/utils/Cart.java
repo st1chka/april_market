@@ -6,12 +6,10 @@ import org.springframework.stereotype.Component;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.OrderItem;
 import ru.geekbrains.april.market.models.Product;
-import ru.geekbrains.april.market.models.User;
 import ru.geekbrains.april.market.services.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,13 +42,27 @@ public class Cart {
         recalculate();
     }
 
+
+    public int getTotalQuantity(){
+        int totalQuantity = 0;
+        for (OrderItem oi : items) {
+            totalQuantity += oi.getQuantity();
+        }
+        return totalQuantity;
+    }
+
     public void deleteToCart(Long id) {
+
         for (OrderItem orderItem : items) {
+            if (orderItem.getQuantity()==1){
+                items.remove(orderItem);
+            }
             if (orderItem.getProduct().getId().equals(id)) {
                 orderItem.decrementQuantity();
                 recalculate();
                 return;
             }
+
         }
         Optional<Product> product = productService.findById(id);
         items.remove(product);
@@ -72,4 +84,7 @@ public class Cart {
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(items);
     }
+
+
+
 }

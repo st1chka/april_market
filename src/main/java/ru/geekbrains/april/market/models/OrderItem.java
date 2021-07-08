@@ -58,7 +58,7 @@ public class OrderItem {
     }
 
     public void incrementQuantity() {
-        this.user = user;
+
         this.quantity++;
         this.price = this.pricePerProduct.multiply(new BigDecimal(this.quantity));
     }

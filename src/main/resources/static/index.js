@@ -1,6 +1,8 @@
 angular.module('app', ['ngStorage']).controller('indexController', function ($scope, $http, $location, $localStorage) {
     const contextPath = 'http://localhost:8189/market';
 
+
+
     $scope.loadPage = function (page) {
         $http({
             url: '/market/api/v1/products',
@@ -27,6 +29,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
             console.log("PAGE FROM BACKEND")
             console.log($scope.productsPage);
         });
+
     };
 
     $scope.createNewProduct = function () {
@@ -51,6 +54,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         }).then(function (response) {
             $scope.cartDto = response.data;
         });
+
     };
 
     $scope.addToCart = function (productId) {
@@ -60,7 +64,9 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         }).then(function (response) {
             $scope.loadCart();
         });
+
     }
+
     $scope.deleteToCart = function (productId) {
         $http({
             url: contextPath + '/api/v1/cart/delete/' + productId,
@@ -68,7 +74,10 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         }).then(function (response) {
             $scope.loadCart();
         });
+
     }
+
+
 
     $scope.generatePagesIndexes = function (startPage, endPage) {
         let arr = [];
