@@ -1,3 +1,6 @@
+
+
+
 angular.module('app', ['ngStorage']).controller('indexController', function ($scope, $http, $location, $localStorage) {
     const contextPath = 'http://localhost:8189/market';
 
@@ -5,7 +8,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
     $scope.loadPage = function (page) {
         $http({
-            url: '/market/api/v1/products',
+            url: contextPath + '/api/v1/products',
             method: 'GET',
             params: {
                 p: page
@@ -49,7 +52,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
     $scope.loadCart = function (page) {
         $http({
-            url: '/market/api/v1/cart',
+            url: contextPath +  '/api/v1/cart',
             method: 'GET'
         }).then(function (response) {
             $scope.cartDto = response.data;

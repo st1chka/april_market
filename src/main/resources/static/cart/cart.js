@@ -1,7 +1,7 @@
 angular.module('app').controller('cartController', function ($scope, $http, $localStorage) {
     const contextPath = 'http://localhost:8189/market';
 
-    $scope.showCart = function (page) {
+    $scope.loadCart = function (page) {
         $http({
             url: contextPath + '/api/v1/cart',
             method: 'GET'
@@ -16,7 +16,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
             url: contextPath + '/api/v1/cart/add/' + productId,
             method: 'GET'
         }).then(function (response) {
-            $scope.showCart();
+            $scope.loadCart();
         });
     }
 
@@ -28,7 +28,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                 id: productId
             }
         }).then(function (response) {
-            $scope.showCart();
+            $scope.loadCart();
         });
     }
 
@@ -40,7 +40,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                 id: productId
             }
         }).then(function (response) {
-            $scope.showCart();
+            $scope.loadCart();
         });
     }
 
@@ -49,7 +49,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
             url: contextPath + '/api/v1/cart/clear',
             method: 'GET'
         }).then(function (response) {
-            $scope.showCart();
+            $scope.loadCart();
         });
     };
 
@@ -70,7 +70,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                 phone: phone
             }
         }).then(function (response) {
-            $scope.showCart();
+            $scope.loadCart();
             alert('Заказ успешно оформлен');
             window.location.href = '#!/orders';
         });
