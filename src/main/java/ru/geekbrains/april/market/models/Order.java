@@ -11,11 +11,13 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-@Data
+
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor
+@Data
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -32,12 +34,6 @@ public class Order {
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "phone")
-    private Long phone;
-
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -46,6 +42,4 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Order(Order order) {
-    }
 }

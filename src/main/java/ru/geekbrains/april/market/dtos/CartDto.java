@@ -11,13 +11,9 @@ import java.util.stream.Collectors;
 public class CartDto {
     private List<OrderItemDto> items;
     private BigDecimal sum;
-    private int totalQuantity;
-
 
     public CartDto(Cart cart) {
         this.items = cart.getItems().stream().map(OrderItemDto::new).collect(Collectors.toList());
         this.sum = cart.getSum();
-        this.totalQuantity = cart.getTotalQuantity();
-
     }
 }

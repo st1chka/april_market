@@ -1,14 +1,9 @@
-
-
-
 angular.module('app', ['ngStorage']).controller('indexController', function ($scope, $http, $location, $localStorage) {
     const contextPath = 'http://localhost:8189/market';
 
-
-
     $scope.loadPage = function (page) {
         $http({
-            url: contextPath + '/api/v1/products',
+            url: '/market/api/v1/products',
             method: 'GET',
             params: {
                 p: page
@@ -32,8 +27,16 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
             console.log("PAGE FROM BACKEND")
             console.log($scope.productsPage);
         });
-
     };
+    $scope.loadCart = function (page) {
+        $http({
+            url: '/market/api/v1/cart',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.cartDto = response.data;
+        });
+    };
+
 
     $scope.createNewProduct = function () {
         $http.post(contextPath + '/api/v1/products', $scope.newProduct)
@@ -50,15 +53,16 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         console.log(product);
     }
 
-    $scope.loadCart = function (page) {
-        $http({
-            url: contextPath +  '/api/v1/cart',
-            method: 'GET'
-        }).then(function (response) {
-            $scope.cartDto = response.data;
-        });
 
-    };
+    $scope.generatePagesIndexes = function (startPage, endPage) {
+        let arr = [];
+        for (let i = startPage; i < endPage + 1; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
+
+
 
     $scope.addToCart = function (productId) {
         $http({
@@ -68,26 +72,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
             $scope.loadCart();
         });
 
-    }
 
-    $scope.deleteToCart = function (productId) {
-        $http({
-            url: contextPath + '/api/v1/cart/delete/' + productId,
-            method: 'GET'
-        }).then(function (response) {
-            $scope.loadCart();
-        });
-
-    }
-
-
-
-    $scope.generatePagesIndexes = function (startPage, endPage) {
-        let arr = [];
-        for (let i = startPage; i < endPage + 1; i++) {
-            arr.push(i);
-        }
-        return arr;
     }
 
     $scope.tryToAuth = function () {
@@ -99,6 +84,8 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
                     $scope.user.username = null;
                     $scope.user.password = null;
+
+                    $scope.showMyOrders();
                 }
             }, function errorCallback(response) {
             });
@@ -130,8 +117,39 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         });
     };
 
+    $scope.createOrder = function () {
+        $http({
+            url: contextPath + '/api/v1/orders',
+            method: 'POST'
+        }).then(function (response) {
+            $scope.showMyOrders();
+            alert('Заказ оформлен');
+
+        });
+    }
+    $scope.showMyOrders = function () {
+        $http({
+            url: contextPath + '/api/v1/orders',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.myOrders = response.data;
+
+        });
+    }
+
+    $scope.clearCart = function () {
+        $http({
+            url: contextPath + '/api/v1/cart/clear',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.loadCart();
+
+        });
+    }
+
     if ($localStorage.aprilMarketCurrentUser) {
         $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.aprilMarketCurrentUser.token;
+        $scope.showMyOrders();
     }
 
     $scope.loadPage(1);

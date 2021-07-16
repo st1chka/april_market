@@ -28,8 +28,8 @@ values ('ROLE_USER'),
        ('ROLE_ADMIN');
 
 insert into users (username, password, email)
-values ('user', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'bob_johnson@gmail.com'), /*pass 100*/
-       ('admin', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'john_johnson@gmail.com'); /*pass 100*/
+values ('user', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'bob_johnson@gmail.com'),
+       ('admin', '$2y$12$4g1SOm4vGFSF/CbT84nOzOyygKSuTtRshecj7HYOCC1xUPjhkVPWG', 'john_johnson@gmail.com');
 
 insert into users_roles (user_id, role_id)
 values (1, 1),
@@ -57,23 +57,24 @@ create table products
 );
 
 insert into products (title, price, category_id)
-values ('Хлеб', 25.50, 1),
-       ('Молоко', 80.40, 1),
-       ('Огурцы', 30.40, 1),
-       ('Помидоры', 25.40, 1),
-       ('Тушенка', 60.00, 1),
-       ('Батон', 50.00, 1),
-       ('Лимон', 24.00, 1),
-       ('Майонез', 80.00, 1),
-       ('Кетчуп', 84.00, 1),
-       ('Макароны', 100.00, 1),
-       ('Апельсин', 35.00, 1);
+values ('Bread', 25.50, 1),
+       ('Milk', 80.40, 1),
+       ('Cheese', 325.00, 1);
 
 
+create table orders
+(
+    id         bigserial primary key,
+    user_id    bigint references users (id),
+    price      numeric(8, 2),
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
 
+);
 create table order_items
 (
     id                bigserial primary key,
+    order_id          bigint references products (id),
     product_id        bigint references products (id),
     quantity          int,
     price_per_product numeric(8, 2),
@@ -83,14 +84,4 @@ create table order_items
 );
 
 
-create table orders
-(
-    id         bigserial primary key,
-    user_id    bigint  references users (id),
-    price      numeric(8, 2),
-    address    varchar(255),
-    phone      bigint,
-    created_at timestamp default current_timestamp,
-    updated_at timestamp default current_timestamp
-);
 

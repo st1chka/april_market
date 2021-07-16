@@ -3,6 +3,7 @@ package ru.geekbrains.april.market.utils;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.OrderItem;
 import ru.geekbrains.april.market.models.Product;
@@ -13,7 +14,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Data
@@ -42,33 +42,6 @@ public class Cart {
         recalculate();
     }
 
-
-    public int getTotalQuantity(){
-        int totalQuantity = 0;
-        for (OrderItem oi : items) {
-            totalQuantity += oi.getQuantity();
-        }
-        return totalQuantity;
-    }
-
-    public void deleteToCart(Long id) {
-
-        for (OrderItem orderItem : items) {
-            if (orderItem.getQuantity()==1){
-                items.remove(orderItem);
-            }
-            if (orderItem.getProduct().getId().equals(id)) {
-                orderItem.decrementQuantity();
-                recalculate();
-                return;
-            }
-
-        }
-        Optional<Product> product = productService.findById(id);
-        items.remove(product);
-        recalculate();
-    }
-
     public void clear() {
         items.clear();
         recalculate();
@@ -84,7 +57,4 @@ public class Cart {
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(items);
     }
-
-
-
 }

@@ -10,3 +10,7 @@ public class JwtRequest {
     private String password;
 }
 
+// {
+//    "username": "Bob",
+//    "password": "100"
+// }

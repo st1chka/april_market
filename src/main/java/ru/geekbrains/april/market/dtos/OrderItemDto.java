@@ -27,6 +27,4 @@ public class OrderItemDto {
         this.pricePerProduct = orderItem.getPricePerProduct();
         this.price = orderItem.getPrice();
     }
-
-
 }
