@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Data
@@ -39,6 +40,20 @@ public class Cart {
 
         Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exists id: " + id + " (add to cart)"));
         items.add(new OrderItem(product));
+        recalculate();
+    }
+
+    public void deleteToCart(Long id) {
+        for (OrderItem orderItem : items) {
+            if (orderItem.getProduct().getId().equals(id)) {
+                orderItem.decrementQuantity();
+                recalculate();
+                return;
+            }
+        }
+
+        Optional<Product> product = productService.findById(id);
+        items.remove(product);
         recalculate();
     }
 
