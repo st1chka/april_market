@@ -55,6 +55,7 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
             });
     };
 
+
     $scope.tryToAuth = function () {
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
@@ -73,6 +74,7 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
         $scope.clearUser();
         $cookies.remove('SESSION');
         $cookies.put('abc', 'cde');
+        $scope.loadCart();
     };
 
     $scope.clearUser = function () {
@@ -87,4 +89,29 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
             return false;
         }
     };
+
+    $scope.loadCart = function (page) {
+        $http({
+            url: contextPath + '/api/v1/cart',
+            method: 'GET',
+            params: {
+                cartName: 'cart'
+            }
+        }).then(function (response) {
+            $scope.cartDto = response.data;
+
+        });
+    };
+
+    $scope.showCart = function (productId) {
+        $http({
+            url: contextPath + '/api/v1/cart',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.cartDto = response.data;
+            $scope.cartSum = 0;
+        });
+    }
+    $scope.showCart();
+    $scope.loadCart();
 });

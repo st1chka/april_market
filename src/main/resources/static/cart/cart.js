@@ -10,6 +10,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
             }
         }).then(function (response) {
             $scope.cartDto = response.data;
+
         });
     };
 
@@ -68,5 +69,15 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
         });
     }
 
+    $scope.showCart = function (productId) {
+        $http({
+            url: contextPath + '/api/v1/cart',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.cartDto = response.data;
+            $scope.cartSum = 0;
+        });
+    }
+    $scope.showCart();
     $scope.loadCart();
 });

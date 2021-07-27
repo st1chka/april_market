@@ -1,77 +1,45 @@
-//package ru.geekbrains.april.market.utils;
-////import org.aspectj.lang.annotation.Before;
-//import org.junit.*;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.testng.annotations.BeforeSuite;
-//import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
-//import ru.geekbrains.april.market.models.OrderItem;
-//import ru.geekbrains.april.market.models.Product;
-//import ru.geekbrains.april.market.services.ProductService;
-//
-//import java.math.BigDecimal;
-//import java.util.ArrayList;
-//import java.util.Collections;
-//import java.util.List;
-//
-//
-//@SpringBootTest(classes = Cart.class)
-//public class TestCart {
-//
-//    @Autowired
-//    Cart cart;
-//
-//    @MockBean
-//    private  ProductService productService;
-//
-//    private List<OrderItem> items;
-//    private BigDecimal sum;
-//
-//    @BeforeSuite
-//    public void init(){
-//        items = new ArrayList<>();
-//    }
-//
-//    @Test
-//    public void addToCart(Long id) {
-//        for (OrderItem orderItem : items) {
-//            if (orderItem.getProduct().getId().equals(id)) {
-//                orderItem.incrementQuantity();
-//                recalculate();
-//                return;
-//            }
-//        }
-//
-//        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exists id: " + id + " (add to cart)"));
-//        items.add(new OrderItem(product));
-//        recalculate();
-//    }
-//    @Test
-//    public void deleteToCart(Long id) {
-//        for (OrderItem orderItem : items) {
-//            if (orderItem.getProduct().getId().equals(id)) {
-//                orderItem.decrementQuantity();
-//                recalculate();
-//                return;
-//            }
-//        }
-//    }
-//    @Test
-//    public void clear() {
-//        items.clear();
-//        recalculate();
-//    }
-//    @Test
-//    private void recalculate() {
-//        sum = BigDecimal.ZERO;
-//        for (OrderItem oi : items) {
-//            sum = sum.add(oi.getPrice());
-//        }
-//    }
-//
-//    @Test
-//    public List<OrderItem> getItems() {
-//        return Collections.unmodifiableList(items);
-//    }
-//}
+package ru.geekbrains.april.market.utils;
+
+//import io.jsonwebtoken.lang.Assert;
+//import org.assertj.core.api.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.util.Assert;
+import ru.geekbrains.april.market.models.OrderItem;
+import ru.geekbrains.april.market.models.User;
+import ru.geekbrains.april.market.repositories.UserRepository;
+import ru.geekbrains.april.market.services.UserService;
+
+import java.util.Optional;
+
+
+@SpringBootTest
+public class TestCart {
+
+    @Autowired
+    private UserService userService;
+
+    @MockBean
+    private UserRepository userRepository;
+
+
+    @Test
+    public void findOneUserTest(){
+        User userFromBD = new User();
+        userFromBD.setUsername("Nick");
+        userFromBD.setEmail("nick@mail.ru");
+
+        Mockito.doReturn(Optional.of(userFromBD))
+                .when(userRepository)
+                .findByUsername("Nick");
+
+        User userNick = userService.findByUsername("Nick").get();
+        Assertions.assertNotNull(userNick);
+        Assertions.assertEquals("nick@mail.ru", userNick.getEmail());
+        Mockito.verify(userRepository,Mockito.times(1)).findByUsername("Nick");
+    }
+}
