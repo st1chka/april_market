@@ -22,7 +22,7 @@ public class MailService {
         message.setFrom(new InternetAddress("kalinine03@gmail.com"));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress("pechenka99@mail.ru")); // почта получателя
         message.setSubject("Order");
-        message.setText("мать на аве, аниме в канаве");
+        message.setText("вы оформили заказ");
 
 
         Transport transport = mailSession.getTransport();
