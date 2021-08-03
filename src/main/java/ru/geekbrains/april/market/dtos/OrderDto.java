@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.geekbrains.april.market.models.Order;
 import ru.geekbrains.april.market.models.OrderItem;
+import ru.geekbrains.april.market.services.MailService;
 
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
@@ -21,4 +22,6 @@ public class OrderDto {
         this.price = order.getPrice();
         this.description = order.getItems().stream().map(o -> o.getProduct().getTitle() + " x" + o.getQuantity()).collect(Collectors.joining(", "));
     }
+
+
 }
