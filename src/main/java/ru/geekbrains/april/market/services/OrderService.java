@@ -12,6 +12,8 @@ import ru.geekbrains.april.market.repositories.OrderRepository;
 import ru.geekbrains.april.market.repositories.ProductRepository;
 import ru.geekbrains.april.market.utils.Cart;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +22,13 @@ import java.util.Optional;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final Cart cart;
+    private  MailService mailService;
 
     public List<Order> findAllByUser (User user){
         return orderRepository.findAllByUser(user);
     }
 
-    public Order createOrderForCurrentUser(User user){
+    public Order createOrderForCurrentUser(User user) throws MessagingException, IOException {
         Order order = new Order();
         order.setUser(user);
         order.setPrice(cart.getSum());
@@ -36,6 +39,8 @@ public class OrderService {
         }
 
         order = orderRepository.save(order);
+
+
         cart.clear();
         return order;
     }

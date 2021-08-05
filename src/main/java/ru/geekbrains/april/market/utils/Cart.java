@@ -7,9 +7,12 @@ import ru.geekbrains.april.market.dtos.ProductDto;
 import ru.geekbrains.april.market.error_handling.ResourceNotFoundException;
 import ru.geekbrains.april.market.models.OrderItem;
 import ru.geekbrains.april.market.models.Product;
+import ru.geekbrains.april.market.services.MailService;
 import ru.geekbrains.april.market.services.ProductService;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,12 +27,13 @@ public class Cart {
     private List<OrderItem> items;
     private BigDecimal sum;
 
+
     @PostConstruct
     public void init() {
         items = new ArrayList<>();
     }
 
-    public void addToCart(Long id) {
+    public void addToCart(Long id)  {
         for (OrderItem orderItem : items) {
             if (orderItem.getProduct().getId().equals(id)) {
                 orderItem.incrementQuantity();
@@ -41,6 +45,7 @@ public class Cart {
         Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product doesn't exists id: " + id + " (add to cart)"));
         items.add(new OrderItem(product));
         recalculate();
+
     }
 
     public void deleteToCart(Long id) {
@@ -79,5 +84,14 @@ public class Cart {
 
     public List<OrderItem> getItems() {
         return Collections.unmodifiableList(items);
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "productService=" + productService +
+                ", items=" + items +
+                ", sum=" + sum +
+                '}';
     }
 }

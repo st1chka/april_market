@@ -33,6 +33,7 @@ public class OrderController {
     private final MailService mailService;
 
 
+
     @PostMapping
     public void createNewOrder(Principal principal) throws MessagingException, IOException {
         User user = userService.findByUsername(principal.getName()).get();

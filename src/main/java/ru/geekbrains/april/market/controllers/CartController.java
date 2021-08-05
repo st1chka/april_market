@@ -4,14 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.april.market.dtos.CartDto;
+import ru.geekbrains.april.market.services.MailService;
 import ru.geekbrains.april.market.utils.Cart;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/cart")
 @RequiredArgsConstructor
 @Slf4j
 public class CartController {
-    private final Cart cart;
+      private final Cart cart;
+      private final MailService mailService;
 
     @GetMapping("/add/{productId}")
     public void addToCart(@PathVariable(name = "productId") Long id) {
