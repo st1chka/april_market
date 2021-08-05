@@ -33,6 +33,11 @@ public class OrderItem {
     @Column(name = "price")
     private BigDecimal price;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -54,12 +59,10 @@ public class OrderItem {
     }
 
     public void decrementQuantity() {
-        if (quantity<1){
+        if (this.quantity < 1) {
             return;
-        }else {
-            this.quantity--;
-            this.price = this.pricePerProduct.multiply(new BigDecimal(this.quantity));
         }
-
+        this.quantity--;
+        this.price = this.pricePerProduct.multiply(new BigDecimal(this.quantity));
     }
 }

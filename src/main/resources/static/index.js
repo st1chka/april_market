@@ -1,82 +1,60 @@
-angular.module('app', ['ngStorage']).controller('indexController', function ($scope, $http, $location, $localStorage) {
+(function ($localStorage) {
+    // 'use strict';
+
+    angular
+        .module('app', ['ngRoute', 'ngStorage', 'ngCookies'])
+        .config(config)
+        .run(run);
+
+    function config($routeProvider, $httpProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: '/home/home.html',
+                controller: 'homeController'
+            })
+            .when('/products', {
+                templateUrl: 'products/products.html',
+                controller: 'productsController'
+            })
+            .when('/cart', {
+                templateUrl: 'cart/cart.html',
+                controller: 'cartController'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
+    }
+
+    function run($rootScope, $http, $localStorage) {
+        if ($localStorage.aprilMarketCurrentUser) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.aprilMarketCurrentUser.token;
+        }
+    }
+})();
+
+angular.module('app').controller('indexController', function ($scope, $http, $localStorage, $location, $cookies) {
     const contextPath = 'http://localhost:8189/market';
 
-    $scope.loadPage = function (page) {
-        $http({
-            url: '/market/api/v1/products',
-            method: 'GET',
-            params: {
-                p: page
-            }
-        }).then(function (response) {
-
-            $scope.productsPage = response.data;
-
-            let minPageIndex = page - 2;
-            if (minPageIndex < 1) {
-                minPageIndex = 1;
-            }
-
-            let maxPageIndex = page + 2;
-            if (maxPageIndex > $scope.productsPage.totalPages) {
-                maxPageIndex = $scope.productsPage.totalPages;
-            }
-
-            $scope.paginationArray = $scope.generatePagesIndexes(minPageIndex, maxPageIndex);
-
-            console.log("PAGE FROM BACKEND")
-            console.log($scope.productsPage);
-        });
-    };
-
-    $scope.createNewProduct = function () {
-        $http.post(contextPath + '/api/v1/products', $scope.newProduct)
+    $scope.tryToAuth = function () {
+        // if ($scope.username.length < 2) {
+        //     alert('error');
+        //     return;
+        // }
+        $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
-                $scope.loadPage(1);
-                $scope.newProduct = null;
+                if (response.data.token) {
+                    $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+                    $localStorage.currentUser = {username: $scope.user.username, token: response.data.token};
+
+                    $scope.currentUserName = $scope.user.username;
+
+                    $scope.user.username = null;
+                    $scope.user.password = null;
+                }
             }, function errorCallback(response) {
-                console.log(response.data);
-                alert('Error: ' + response.data.messages);
             });
     };
 
-    $scope.clickOnProduct = function (product) {
-        console.log(product);
-    }
-
-    $scope.loadCart = function (page) {
-        $http({
-            url: '/market/api/v1/cart',
-            method: 'GET'
-        }).then(function (response) {
-            $scope.cartDto = response.data;
-        });
-    };
-
-    $scope.addToCart = function (productId) {
-        $http({
-            url: contextPath + '/api/v1/cart/add/' + productId,
-            method: 'GET'
-        }).then(function (response) {
-            $scope.loadCart();
-        });
-    }
-    $scope.deleteToCart = function (productId) {
-        $http({
-            url: contextPath + '/api/v1/cart/delete/' + productId,
-            method: 'GET'
-        }).then(function (response) {
-            $scope.loadCart();
-        });
-    }
-
-    $scope.generatePagesIndexes = function (startPage, endPage) {
-        let arr = [];
-        for (let i = startPage; i < endPage + 1; i++) {
-            arr.push(i);
-        }
-        return arr;
-    }
 
     $scope.tryToAuth = function () {
         $http.post(contextPath + '/auth', $scope.user)
@@ -94,6 +72,9 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
+        $cookies.remove('SESSION');
+        $cookies.put('abc', 'cde');
+        $scope.loadCart();
     };
 
     $scope.clearUser = function () {
@@ -109,19 +90,28 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
         }
     };
 
-    $scope.whoAmI = function () {
+    $scope.loadCart = function (page) {
         $http({
-            url: contextPath + '/api/v1/users/me',
-            method: 'GET'
+            url: contextPath + '/api/v1/cart',
+            method: 'GET',
+            params: {
+                cartName: 'cart'
+            }
         }).then(function (response) {
-            alert(response.data.username + ' ' + response.data.email);
+            $scope.cartDto = response.data;
+
         });
     };
 
-    if ($localStorage.aprilMarketCurrentUser) {
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.aprilMarketCurrentUser.token;
+    $scope.showCart = function (productId) {
+        $http({
+            url: contextPath + '/api/v1/cart',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.cartDto = response.data;
+            $scope.cartSum = 0;
+        });
     }
-
-    $scope.loadPage(1);
+    $scope.showCart();
     $scope.loadCart();
 });
